@@ -2,13 +2,19 @@
 
 @import url('https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&family=Roboto:ital,wght@0,100..900;1,100..900&display=swap');
 
+
+:root{
+    --Rosa:#f7d7d7ce;
+    --Azul:#0f172a;
+}
+
 /*Geral*/
 
 * {
     padding: 0;
     margin:0;
     font-family: 'Inter', sans-serif;
-    color:#333;
+    color:var(--Azul);
     box-sizing: border-box;
 }
 
@@ -19,9 +25,9 @@ body {
 }
 
 button {
-    background-color: #f7d7d7ce;
-    color: #0f172a;
-    border: 2px solid #0f172a;
+    background-color: var(--Rosa);
+    color: var(--Azul);
+    border: 2px solid var(--Azul);
     padding: .3rem .6rem;
     font-size: 1rem;
     cursor: pointer;
@@ -32,17 +38,17 @@ button {
 }
 
 button:hover {
-    background-color: #0f172a;
-    color:#f7d7d7ce;
-    border: 2px solid #0f172a;
+    background-color: var(--Azul);
+    color:var(--Rosa);
+    border: 2px solid var(--Azul);
 }
 
 button:hover > i {
-    color:#f7d7d7ce;
+    color:var(--Rosa);
 }
 
 button i {
-    color: #0f172a;
+    color: var(--Azul);
     font-weight: bold;
     pointer-events: none;
 }
@@ -60,24 +66,23 @@ input, select {
 .todo-container {
     max-width: 450px;
     margin: 3rem auto;
-    background-color: #f7d7d7e0;
+    background-color: var(--Rosa);
     padding: 1.5rem;
     border-radius:15px ;
-    border: 1px solid #0f172a;
+    border: 1px solid var(--Azul);
 }
 
 .todo-container header {
-    color: #0f172a;
     text-align: center;
     padding: 0 1rem 1rem;
-    border-bottom: 1px solid #0f172a;
+    border-bottom: 1px solid var(--Azul);
 }
 
 /*Todo form*/
 
 #todo-form, #edit-form {
     padding: 1rem;
-    border-bottom: 1px solid #0f172a;
+    border-bottom: 1px solid var(--Azul);
 }
 
 #todo-form p, #edit-form p {
@@ -102,13 +107,87 @@ input, select {
 
 
 #filter-select {
-  background-color: #f7d7d7e0;
-  color: #0f172a;
+  background-color: var(--Rosa);
+  color: var(--Azul);
   padding: 8px 12px;
   border: none;
-  border: 2px solid #0f172a;
+  border: 2px solid var(--Azul);
   font-size: 14px;
   outline: none;
   cursor: pointer;
 }
+
+/*todo toolbar*/
+
+#toolbar {
+    padding: 1rem;
+    border-bottom: 1px solid var(--Azul);
+    display: flex;
+}
+
+#toolbar h4 {
+    margin-bottom: .5rem;
+}
+
+.search {
+    border-right: 1px solid var(--Azul);
+    padding-right:1rem ;
+    margin-right: 1rem;
+    width: 65%;
+    display: flex;
+    flex-direction: column;
+}
+
+.search form {
+    display: flex;
+}
+
+.search input {
+    width: 100%;
+    margin-right: .3rem;
+}
+
+#filter {
+    width: 35%;
+    display: flex;
+    flex-direction: column;
+}  
+
+#filter select {
+    flex: 1;
+}
+
+
+/*Todo list*/
+
+.todo{
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+    padding: 1rem;
+    border-bottom: 1px solid var(--Azul);
+    transition: .3s;
+}
+
+.todo h3 {
+    flex: 1;
+    font-size: 0.9rem;
+}
+
+.todo button {
+    margin-left: 0.4rem;
+}
+
+.done {
+    background-color: var(--Azul);
+}
+
+
+.done h3{
+    color: var(--Rosa);
+    text-decoration: line-through;
+    font-style:italic;
+}
+
+
 
