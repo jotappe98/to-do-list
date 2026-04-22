@@ -2,6 +2,113 @@
 
 @import url('https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&family=Roboto:ital,wght@0,100..900;1,100..900&display=swap');
 
-body{
+/*Geral*/
+
+* {
+    padding: 0;
+    margin:0;
     font-family: 'Inter', sans-serif;
+    color:#333;
+    box-sizing: border-box;
 }
+
+body {
+    background-image: url(../img/light-background.png);
+    background-position: center;
+    background-size: cover;
+}
+
+button {
+    background-color: #f7d7d7ce;
+    color: #0f172a;
+    border: 2px solid #0f172a;
+    padding: .3rem .6rem;
+    font-size: 1rem;
+    cursor: pointer;
+    display:flex;
+    justify-content: center;
+    align-items: center;
+    transition: 0.4s;
+}
+
+button:hover {
+    background-color: #0f172a;
+    color:#f7d7d7ce;
+    border: 2px solid #0f172a;
+}
+
+button:hover > i {
+    color:#f7d7d7ce;
+}
+
+button i {
+    color: #0f172a;
+    font-weight: bold;
+    pointer-events: none;
+}
+
+input, select {
+    padding: 0.25rem 0.5rem;
+}
+
+.hide {
+    display: none;
+}
+
+/*Cabecalho*/
+
+.todo-container {
+    max-width: 450px;
+    margin: 3rem auto;
+    background-color: #f7d7d7e0;
+    padding: 1.5rem;
+    border-radius:15px ;
+    border: 1px solid #0f172a;
+}
+
+.todo-container header {
+    color: #0f172a;
+    text-align: center;
+    padding: 0 1rem 1rem;
+    border-bottom: 1px solid #0f172a;
+}
+
+/*Todo form*/
+
+#todo-form, #edit-form {
+    padding: 1rem;
+    border-bottom: 1px solid #0f172a;
+}
+
+#todo-form p, #edit-form p {
+    margin-bottom: 0.5rem;
+    font-weight: bold;
+}
+
+.form-control {
+    display: flex;
+}
+
+.form-control input {
+    margin-right: 0.3rem;
+}
+
+#cancel-edit-btn {
+    margin-top: 1rem;
+}
+
+
+
+
+
+#filter-select {
+  background-color: #f7d7d7e0;
+  color: #0f172a;
+  padding: 8px 12px;
+  border: none;
+  border: 2px solid #0f172a;
+  font-size: 14px;
+  outline: none;
+  cursor: pointer;
+}
+
