@@ -6,7 +6,12 @@ const editForm = document.querySelector("#edit-form");
 const editInput = document.querySelector("#edit-input");
 const cancelEditBtn = document.querySelector("#cancel-edit-btn");
 
+let oldInputValue;
+
 //Funcoes
+
+
+//Funcao para criar uma nova tarefa
 const saveTodo = (text) => {
 
     const todo = document.createElement("div")
@@ -37,9 +42,39 @@ const saveTodo = (text) => {
     todoInput.focus();
 }
 
+//Funcao para alternar entre os formularios de edicao e criacao de tarefas
+const toggleForms = () => {
+    editForm.classList.toggle("hide");
+    todoForm.classList.toggle("hide");
+    todoList.classList.toggle("hide");
+}
+
+
+
+//Funcao para atualizar uma tarefa
+
+const updateTodo = (text) => {
+    const todos = document.querySelectorAll(".todo");
+    todos.forEach((todo) => {
+        let todoTitle = todo.querySelector("h3");
+
+        if(todoTitle.innerText === oldInputValue){
+            todoTitle.innerText = text;
+        }
+    });
+}
+
+
+
+
+
+
+
 
 //Eventos
 
+
+//Evento para controlar tarefas
 todoForm.addEventListener("submit", (e) => {
     e.preventDefault();
     
@@ -49,3 +84,49 @@ todoForm.addEventListener("submit", (e) => {
      }
 });
 
+document.addEventListener("click", (e) =>{
+    const targetEl = e.target;
+    const parentEl = targetEl.closest("div");
+    let todoTitle;
+
+    //Recuperacao do titulo da tarefa
+    if(parentEl && parentEl.querySelector("h3")){
+        todoTitle = parentEl.querySelector("h3").innerText;
+    }
+
+    //Conclusão de tarefa
+    if(targetEl.classList.contains("finish-todo")){
+        parentEl.classList.toggle("done");
+    }
+
+    //Edição de tarefa
+    if(targetEl.classList.contains("edit-todo")){
+        toggleForms();
+        editInput.value = todoTitle;
+        oldInputValue = todoTitle;
+    }
+
+    //Remoção de tarefa
+    if(targetEl.classList.contains("remove-todo")){
+        parentEl.remove();
+    }
+});
+
+//Evento para cancelar a edição de uma tarefa
+cancelEditBtn.addEventListener("click", (e) => {
+    e.preventDefault();
+    toggleForms();
+});
+
+//Evento para salvar a edição de uma tarefa
+editForm.addEventListener("submit", (e) => {
+    e.preventDefault();
+
+    const editInputValue = editInput.value;
+
+    if(editInputValue ){
+        updateTodo(editInputValue);
+    };
+
+    toggleForms();
+})
