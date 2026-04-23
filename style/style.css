@@ -145,6 +145,8 @@ input, select {
 .search input {
     width: 100%;
     margin-right: .3rem;
+    height: 38px;             
+    padding: 0 0.6rem; 
 }
 
 #filter {
@@ -154,7 +156,8 @@ input, select {
 }  
 
 #filter select {
-    flex: 1;
+    flex: 1;             
+    padding: 0 0.6rem; 
 }
 
 
@@ -187,6 +190,11 @@ input, select {
     color: var(--Rosa);
     text-decoration: line-through;
     font-style:italic;
+}
+
+
+#todo-input{
+    height: 38px;
 }
 
 
