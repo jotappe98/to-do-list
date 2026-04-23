@@ -18,6 +18,11 @@
     box-sizing: border-box;
 }
 
+
+html{
+    height: 100vh;
+}
+
 body {
     background-image: url(../img/light-background.png);
     background-position: center;
