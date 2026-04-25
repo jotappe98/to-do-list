@@ -33,7 +33,7 @@
         <form  id="edit-form" class="hide">
             <p>Editar tarefa</p>
             <div class="form-control">
-                <input type="text" id="edit-input" placeholder="O que você quer editar?">
+                <input type="text" id="edit-input" placeholder="O que você quer editar?" autocomplete="off">
                 <button type="submit">
                     <i class="fa-solid fa-check-double"></i>
                 </button>
@@ -45,7 +45,7 @@
             <div class="search">
                 <h4>Pesquisar:</h4>
                 <form>
-                    <input type="text" id="search-input" placeholder="Buscar">
+                    <input type="text" id="search-input" placeholder="Buscar" autocomplete="off">
                     <button id="erase-button">
                         <i class="fa-solid fa-delete-left"></i>
                     </button>
@@ -60,6 +60,9 @@
                 </select>
             </div>
         </div>
+
+        <p id="empty-state">O que vamos fazer hoje?</p>
+
         <div id="todo-list">
             <div class="todo done">
                 <h3>Alguma tarefa...</h3>
@@ -87,7 +90,7 @@
                 </button>
             </div>
 
-            <p id="no-results" style="display: none; text-align: center; font-weight: bold; color:#0f172a ;">Nada encontrado...</p>
+            <p id="no-results" style="display: none; text-align: center; font-weight: bold; color:#0f172a ;">Nenhuma tarefa encontrada</p>
         </div>
     </div>   
 </body>

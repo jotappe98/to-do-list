@@ -16,7 +16,7 @@ let oldInputValue;
 
 
 //Funcao para criar uma nova tarefa
-const saveTodo = (text) => {
+const saveTodo = (text,done = 0,save = 1) => {
 
     const todo = document.createElement("div")
     todo.classList.add("todo")
@@ -40,10 +40,23 @@ const saveTodo = (text) => {
     removeBtn.innerHTML = '<i class="fa-solid fa-xmark"></i>'
     todo.appendChild(removeBtn)
 
+    //Dados da LS
+    if(done){
+        todo.classList.add("done");
+    }
+
+    if(save){
+        saveTodoLocalStorage({
+            text,
+            done
+        });
+    }
+
     todoList.appendChild(todo);
 
     todoInput.value = "";
     todoInput.focus();
+    toggleEmptyState();
 }
 
 //Funcao para alternar entre os formularios de edicao e criacao de tarefas
@@ -136,6 +149,44 @@ const filterTodos = (filterValue) => {
     };
 };
 
+//Funcao para UX dinamico
+
+const toggleEmptyState = () => {
+    const todos = document.querySelectorAll(".todo");
+    const visibleTodos = Array.from(todos).filter(todo => todo.style.display !== "none");
+    const emptyState = document.querySelector("#empty-state");
+
+    
+    if (!editForm.classList.contains("hide")) {
+        emptyState.style.display = "none";
+        return;
+    }
+
+    emptyState.style.display = "block";
+
+    const filterValue = filterBtn.value;
+
+    
+    if (visibleTodos.length === 0) {
+        switch(filterValue) {
+            case "all":
+                emptyState.innerText = "O que vamos fazer hoje?";
+                break;
+            case "done":
+                emptyState.innerText = "Você ainda não concluiu nenhuma tarefa";
+                break;
+            case "todo":
+                emptyState.innerText = "Sem tarefas pendentes";
+                break;
+        }
+
+        emptyState.classList.remove("has-tasks");
+    } else {
+        emptyState.innerText = "Suas tarefas:";
+        emptyState.classList.add("has-tasks");
+    }
+};
+
 
 //Eventos
 
@@ -163,6 +214,7 @@ document.addEventListener("click", (e) =>{
     //Conclusão de tarefa
     if(targetEl.classList.contains("finish-todo")){
         parentEl.classList.toggle("done");
+        updateLocalStorage();
     }
 
     //Edição de tarefa
@@ -170,11 +222,14 @@ document.addEventListener("click", (e) =>{
         toggleForms();
         editInput.value = todoTitle;
         oldInputValue = todoTitle;
+        toggleEmptyState(); 
     }
 
     //Remoção de tarefa
     if(targetEl.classList.contains("remove-todo")){
         parentEl.remove();
+        updateLocalStorage();
+        toggleEmptyState();
     }
 });
 
@@ -182,6 +237,7 @@ document.addEventListener("click", (e) =>{
 cancelEditBtn.addEventListener("click", (e) => {
     e.preventDefault();
     toggleForms();
+    toggleEmptyState();
 });
 
 //Evento para salvar a edição de uma tarefa
@@ -192,9 +248,11 @@ editForm.addEventListener("submit", (e) => {
 
     if(editInputValue ){
         updateTodo(editInputValue);
+        updateLocalStorage();
     };
 
     toggleForms();
+    toggleEmptyState();
 })
 
 
@@ -220,4 +278,49 @@ eraseBtn.addEventListener("click", (e) => {
 filterBtn.addEventListener("change", (e) => {
     const filterValue = e.target.value;
     filterTodos(filterValue);
+    toggleEmptyState();
+});
+
+
+//local storage
+
+const getTodosLocalStorage = () => {
+    const todos = JSON.parse(localStorage.getItem("todos")) || [];
+
+    return todos;
+};
+
+const saveTodoLocalStorage = (todo) => {
+
+    const todos = getTodosLocalStorage(); 
+
+    todos.push(todo);
+
+    localStorage.setItem("todos", JSON.stringify(todos));
+
+};
+
+//atualizar todo o estado no localStorage
+const updateLocalStorage = () => {
+    const todos = [];
+
+    document.querySelectorAll(".todo").forEach((todo) => {
+        const text = todo.querySelector("h3").innerText;
+        const done = todo.classList.contains("done");
+
+        todos.push({ text, done });
+    });
+
+    localStorage.setItem("todos", JSON.stringify(todos));
+};
+
+//carregar tarefas ao iniciar
+document.addEventListener("DOMContentLoaded", () => {
+    const todos = getTodosLocalStorage();
+
+    todos.forEach((todo) => {
+        saveTodo(todo.text, todo.done, 0);
+    });
+
+    toggleEmptyState();
 });

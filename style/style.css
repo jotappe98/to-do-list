@@ -122,6 +122,25 @@ input, select {
   cursor: pointer;
 }
 
+
+/*UX dinamico*/
+#empty-state {
+    color: var(--Azul);
+    text-align: center;
+    margin-top: 2rem;
+    font-weight: bold;;
+    font-style: italic;
+}
+
+#empty-state.has-tasks {
+    color: var(--Azul);
+    text-align: center;
+    font-weight: bold;
+    font-style: italic;
+    margin-bottom: 1rem;
+
+}
+
 /*todo toolbar*/
 
 #toolbar {
