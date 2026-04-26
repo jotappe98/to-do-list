@@ -8,6 +8,7 @@ const cancelEditBtn = document.querySelector("#cancel-edit-btn");
 const searchInput = document.querySelector("#search-input");
 const eraseBtn = document.querySelector("#erase-button");
 const filterBtn = document.querySelector("#filter-select");
+const confirmEditBtn = document.querySelector("#confirm-edit");
 
 
 
@@ -76,7 +77,7 @@ const updateTodo = (text) => {
     todos.forEach((todo) => {
         let todoTitle = todo.querySelector("h3");
 
-        if(todoTitle.innerText === oldInputValue){
+        if(todoTitle.innerText.trim() === oldInputValue.trim()){ 
             todoTitle.innerText = text;
         }
     });
@@ -283,6 +284,20 @@ filterBtn.addEventListener("change", (e) => {
     toggleEmptyState();
 });
 
+//Evento para confirmar a edição de uma tarefa
+confirmEditBtn.addEventListener("click", (e) => {
+    e.preventDefault();
+
+    const editInputValue = editInput.value;
+
+    if (editInputValue) {
+        updateTodo(editInputValue);
+        updateLocalStorage();
+    }
+
+    toggleForms();
+    toggleEmptyState();
+});
 
 //local storage
 
