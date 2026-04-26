@@ -10,6 +10,7 @@ const eraseBtn = document.querySelector("#erase-button");
 const filterBtn = document.querySelector("#filter-select");
 
 
+
 let oldInputValue;
 
 //Funcoes
@@ -230,6 +231,7 @@ document.addEventListener("click", (e) =>{
         parentEl.remove();
         updateLocalStorage();
         toggleEmptyState();
+        removeTodoLocalStorage(todoTitle);
     }
 });
 
@@ -284,12 +286,14 @@ filterBtn.addEventListener("change", (e) => {
 
 //local storage
 
+
 const getTodosLocalStorage = () => {
     const todos = JSON.parse(localStorage.getItem("todos")) || [];
 
     return todos;
 };
 
+//salvar todo o estado no localStorage
 const saveTodoLocalStorage = (todo) => {
 
     const todos = getTodosLocalStorage(); 
@@ -314,7 +318,7 @@ const updateLocalStorage = () => {
     localStorage.setItem("todos", JSON.stringify(todos));
 };
 
-//carregar tarefas ao iniciar
+//mostrar todos do localStorage na tela
 document.addEventListener("DOMContentLoaded", () => {
     const todos = getTodosLocalStorage();
 
@@ -324,3 +328,58 @@ document.addEventListener("DOMContentLoaded", () => {
 
     toggleEmptyState();
 });
+
+
+//remover tarefa do localStorage
+const removeTodoLocalStorage = (text) => {
+    const todos = getTodosLocalStorage();
+
+    const filteredTodos = todos.filter((todo) => todo.text !== text);
+
+    localStorage.setItem("todos", JSON.stringify(filteredTodos));
+};
+
+
+// dark mode
+
+//selecao elementos
+const themeToggle = document.getElementById("theme-toggle");
+const icon = document.querySelector(".toggle-ball i");
+
+//conectar com o botao
+themeToggle.addEventListener("change", () => {
+    document.body.classList.toggle("dark");
+
+    const isDark = document.body.classList.contains("dark");
+    localStorage.setItem("theme", isDark ? "dark" : "light");
+
+    //mudar icone
+    if (document.body.classList.contains("dark")) {
+        icon.classList.remove("fa-sun");
+        icon.classList.add("fa-moon");
+    } else {
+        icon.classList.remove("fa-moon");
+        icon.classList.add("fa-sun");
+    };
+});
+
+
+// carregar tema salvo no localStorage
+document.addEventListener("DOMContentLoaded", () => {
+    const savedTheme = localStorage.getItem("theme");
+
+    if (savedTheme === "dark") {
+        document.body.classList.add("dark");
+        themeToggle.checked = true;
+        //salvar icone
+        icon.classList.remove("fa-sun");
+        icon.classList.add("fa-moon");
+    }
+});
+
+
+
+
+
+
+

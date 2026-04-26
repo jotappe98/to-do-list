@@ -18,6 +18,14 @@
     <div class="todo-container">
         <header>
              <h1>Lista de tarefas</h1>
+               <div class="theme-toggle">
+                    <input type="checkbox" id="theme-toggle">
+                    <label for="theme-toggle" class="toggle-label">
+                        <span class="toggle-ball">
+                            <i class="fa-solid fa-sun"></i>
+                        </span>
+                    </label>
+                </div>
         </header>
         <form  id="todo-form">
             <p>Adicione uma tarefa</p>
@@ -64,7 +72,7 @@
         <p id="empty-state">O que vamos fazer hoje?</p>
 
         <div id="todo-list">
-            <div class="todo done">
+            <!-- <div class="todo done">
                 <h3>Alguma tarefa...</h3>
                 <button class="finish-todo">
                     <i class="fa-solid fa-check"></i>
@@ -88,7 +96,7 @@
                  <button class="remove-todo">
                     <i class="fa-solid fa-xmark"></i>
                 </button>
-            </div>
+            </div> -->
 
             <p id="no-results" style="display: none; text-align: center; font-weight: bold; color:#0f172a ;">Nenhuma tarefa encontrada</p>
         </div>
