@@ -4,7 +4,7 @@
 
 
 :root {
-    --bg-container: #f7d7d7ce; /* rosa */
+    --bg-container: #f7d7d7ce;
     --text-color: #0f172a;
     --button-bg: #f7d7d7ce;
     --button-text: #0f172a;
@@ -27,9 +27,12 @@ html{
 }
 
 body {
+    overflow-x: hidden;
     background-image: url(../img/light-background.png);
     background-position: center;
     background-size: cover;
+    padding-bottom: 1rem;
+    background-attachment: fixed;
 }
 
 button {
@@ -176,13 +179,13 @@ input, select {
     padding: 0 0.6rem; 
 }
 
-#filter {
+.filter {
     width: 35%;
     display: flex;
     flex-direction: column;
 }  
 
-#filter select {
+.filter select {
     flex: 1;             
     padding: 0 0.6rem; 
 }
@@ -272,8 +275,9 @@ header {
 
 .toggle-ball i {
     font-size: 10px;
-    color: var(--button-bg);
+    color: var(--button-text);
 }
+
 
 /* botao ativo */
 #theme-toggle:checked + .toggle-label {
@@ -288,6 +292,88 @@ header {
 /*icon dark mode*/
 #theme-toggle:checked + .toggle-label .toggle-ball i {
     content: "";
+    color: var(--button-bg);
 }
 
 
+/*media query*/
+
+@media (max-width: 480px) {
+
+    /* Container */
+    .todo-container {
+        margin: 1rem;
+        padding: 1rem;
+    }
+
+    /* Header */
+    header {
+        flex-direction: column;
+        gap: 0.5rem;
+    }
+
+    header h1 {
+        font-size: 1.3rem;
+        text-align: center;
+    }
+
+    /* Toolbar */
+    #toolbar {
+        flex-direction: column;
+        gap: 1rem;
+    }
+
+    .search {
+        border-right: none;
+        border-bottom: 1px solid var(--Azul);
+        padding-right: 0;
+        margin-right: 0;
+        padding-bottom: 1rem;
+        width: 100%;
+    }
+
+    #filter {
+        width: 100%;
+    }
+
+    /* Inputs */
+    .form-control {
+        flex-direction: column;
+    }
+
+    .form-control input {
+        margin-right: 0;
+        margin-bottom: 0.5rem;
+        width: 100%;
+    }
+
+    .form-control button {
+        width: 100%;
+    }
+
+    /* Lista de tarefas */
+    .todo {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 0.5rem;
+    }
+
+    .todo h3 {
+        font-size: 1rem;
+    }
+
+    .todo button {
+        width: 100%;
+        margin-left: 0;
+    }
+
+    
+    .todo {
+        display: flex;
+    }
+
+    .todo button {
+        display: inline-flex;
+    }
+
+}
