@@ -327,18 +327,24 @@ confirmEditBtn.addEventListener("click", (e) => {
 
 //Evento para tarefa duplicada
 
+todoInput.addEventListener("focus", () => {
+    todoInput.dataset.active = "true";
+});
+
 todoInput.addEventListener("input", (e) => {
+    if (todoInput.dataset.active !== "true") return;
+
     const value = e.target.value;
+    const warning = document.querySelector("#duplicate-warning");
+
+    if (!value.trim()) {
+        warning.style.display = "none";
+        return;
+    }
 
     const hasDuplicate = checkDuplicate(value);
 
-    const warning = document.querySelector("#duplicate-warning");
-
-    if (value && hasDuplicate) {
-        warning.style.display = "block";
-    } else {
-        warning.style.display = "none";
-    }
+    warning.style.display = hasDuplicate ? "block" : "none";
 });
 
 //local storage
@@ -383,6 +389,8 @@ document.addEventListener("DOMContentLoaded", () => {
     todos.forEach((todo) => {
         saveTodo(todo.text, todo.done, 0, todo.id);
     });
+
+    document.querySelector("#duplicate-warning").style.display = "none";
 
     toggleEmptyState();
 });
