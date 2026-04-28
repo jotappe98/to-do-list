@@ -13,15 +13,19 @@ const confirmEditBtn = document.querySelector("#confirm-edit");
 
 
 let oldInputValue;
+let editingTodoId = null;
 
 //Funcoes
 
 
 //Funcao para criar uma nova tarefa
-const saveTodo = (text,done = 0,save = 1) => {
+const saveTodo = (text,done = 0,save = 1,idParam = null) => {
 
     const todo = document.createElement("div")
     todo.classList.add("todo")
+
+    const id = idParam ? idParam : Date.now();
+    todo.setAttribute("data-id", id);
 
     const todoTitle = document.createElement("h3")
     todoTitle.innerText = text
@@ -49,10 +53,14 @@ const saveTodo = (text,done = 0,save = 1) => {
 
     if(save){
         saveTodoLocalStorage({
+            id,
             text,
             done
         });
     }
+
+    const warning = document.querySelector("#duplicate-warning");
+    warning.style.display = "none";
 
     todoList.appendChild(todo);
 
@@ -73,14 +81,12 @@ const toggleForms = () => {
 //Funcao para atualizar uma tarefa
 
 const updateTodo = (text) => {
-    const todos = document.querySelectorAll(".todo");
-    todos.forEach((todo) => {
-        let todoTitle = todo.querySelector("h3");
+    const todo = document.querySelector(`[data-id="${editingTodoId}"]`);
 
-        if(todoTitle.innerText.trim() === oldInputValue.trim()){ 
-            todoTitle.innerText = text;
-        }
-    });
+    if (todo) {
+        const todoTitle = todo.querySelector("h3");
+        todoTitle.innerText = text;
+    }
 }
 
 
@@ -190,6 +196,17 @@ const toggleEmptyState = () => {
 };
 
 
+//Funcao de verificacao de tarefa ja existente
+
+const checkDuplicate = (text) => {
+    const todos = document.querySelectorAll(".todo");
+
+    return Array.from(todos).some(todo => {
+        const title = todo.querySelector("h3").innerText.trim().toLowerCase();
+        return title === text.trim().toLowerCase();
+    });
+};
+
 //Eventos
 
 
@@ -205,7 +222,7 @@ todoForm.addEventListener("submit", (e) => {
 
 document.addEventListener("click", (e) =>{
     const targetEl = e.target;
-    const parentEl = targetEl.closest("div");
+    const parentEl = targetEl.closest(".todo");
     let todoTitle;
 
     //Recuperacao do titulo da tarefa
@@ -221,18 +238,22 @@ document.addEventListener("click", (e) =>{
 
     //Edição de tarefa
     if(targetEl.classList.contains("edit-todo")){
-        toggleForms();
-        editInput.value = todoTitle;
-        oldInputValue = todoTitle;
-        toggleEmptyState(); 
-    }
+    toggleForms();
+    editInput.value = todoTitle;
+    oldInputValue = todoTitle;
+
+    editingTodoId = parentEl.getAttribute("data-id");
+
+    toggleEmptyState(); 
+    };
 
     //Remoção de tarefa
     if(targetEl.classList.contains("remove-todo")){
+        const id = parentEl.getAttribute("data-id");
         parentEl.remove();
         updateLocalStorage();
         toggleEmptyState();
-        removeTodoLocalStorage(todoTitle);
+        removeTodoLocalStorage(id);
     }
 });
 
@@ -253,6 +274,8 @@ editForm.addEventListener("submit", (e) => {
         updateTodo(editInputValue);
         updateLocalStorage();
     };
+
+    editingTodoId = null;
 
     toggleForms();
     toggleEmptyState();
@@ -295,8 +318,27 @@ confirmEditBtn.addEventListener("click", (e) => {
         updateLocalStorage();
     }
 
+    editingTodoId = null;
+
     toggleForms();
     toggleEmptyState();
+});
+
+
+//Evento para tarefa duplicada
+
+todoInput.addEventListener("input", (e) => {
+    const value = e.target.value;
+
+    const hasDuplicate = checkDuplicate(value);
+
+    const warning = document.querySelector("#duplicate-warning");
+
+    if (value && hasDuplicate) {
+        warning.style.display = "block";
+    } else {
+        warning.style.display = "none";
+    }
 });
 
 //local storage
@@ -326,8 +368,9 @@ const updateLocalStorage = () => {
     document.querySelectorAll(".todo").forEach((todo) => {
         const text = todo.querySelector("h3").innerText;
         const done = todo.classList.contains("done");
+        const id = todo.getAttribute("data-id");
 
-        todos.push({ text, done });
+        todos.push({ id, text, done });
     });
 
     localStorage.setItem("todos", JSON.stringify(todos));
@@ -338,7 +381,7 @@ document.addEventListener("DOMContentLoaded", () => {
     const todos = getTodosLocalStorage();
 
     todos.forEach((todo) => {
-        saveTodo(todo.text, todo.done, 0);
+        saveTodo(todo.text, todo.done, 0, todo.id);
     });
 
     toggleEmptyState();
@@ -346,10 +389,10 @@ document.addEventListener("DOMContentLoaded", () => {
 
 
 //remover tarefa do localStorage
-const removeTodoLocalStorage = (text) => {
+const removeTodoLocalStorage = (id) => {
     const todos = getTodosLocalStorage();
 
-    const filteredTodos = todos.filter((todo) => todo.text !== text);
+    const filteredTodos = todos.filter((todo) => todo.id != id);
 
     localStorage.setItem("todos", JSON.stringify(filteredTodos));
 };
@@ -370,6 +413,7 @@ themeToggle.addEventListener("change", () => {
 
     //mudar icone
     if (document.body.classList.contains("dark")) {
+        
         icon.classList.remove("fa-sun");
         icon.classList.add("fa-moon");
     } else {
@@ -391,10 +435,3 @@ document.addEventListener("DOMContentLoaded", () => {
         icon.classList.add("fa-moon");
     }
 });
-
-
-
-
-
-
-

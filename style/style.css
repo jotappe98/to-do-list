@@ -103,6 +103,8 @@ input, select {
 
 .form-control {
     display: flex;
+    position: relative;
+    margin-bottom: 1rem;
 }
 
 .form-control input {
@@ -119,7 +121,7 @@ input, select {
 
 #filter-select {
   background-color: var(--bg-container);
-  color: var(--Azul);
+  color: var(--text-color);
   padding: 8px 12px;
   border: none;
   border: 2px solid var(--text-color);
@@ -153,6 +155,7 @@ input, select {
     padding: 1rem;
     border-bottom: 1px solid var(--text-color);
     display: flex;
+
 }
 
 #toolbar h4 {
@@ -166,6 +169,7 @@ input, select {
     width: 65%;
     display: flex;
     flex-direction: column;
+    padding-bottom: 1rem;
 }
 
 .search form {
@@ -183,6 +187,7 @@ input, select {
     width: 35%;
     display: flex;
     flex-direction: column;
+    height: 38px;
 }  
 
 .filter select {
@@ -325,7 +330,7 @@ header {
 
     .search {
         border-right: none;
-        border-bottom: 1px solid var(--Azul);
+        border-bottom: 1px solid var(--text-color);
         padding-right: 0;
         margin-right: 0;
         padding-bottom: 1rem;
@@ -376,4 +381,17 @@ header {
         display: inline-flex;
     }
 
+}
+
+
+/*tarefa duplicada*/
+
+#duplicate-warning {
+    color: rgb(185, 0, 0);
+    font-style: italic;
+    font-size: .8rem;
+    position: absolute;
+    top: 100%;
+    left: 0;
+    margin-top: 5px;
 }
