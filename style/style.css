@@ -161,7 +161,8 @@ input, select {
     padding: 1rem;
     border-bottom: 1px solid var(--text-color);
     display: flex;
-
+    align-items: flex-start; 
+    gap: 2rem; 
 }
 
 #toolbar h4 {
@@ -199,6 +200,12 @@ input, select {
 .filter select {
     flex: 1;             
     padding: 0 0.6rem; 
+}
+
+#search form {
+    display: flex;
+    align-items: center;
+    gap: 8px;
 }
 
 
