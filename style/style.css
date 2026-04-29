@@ -238,6 +238,15 @@ input, select {
 
 body.dark {
     background-image: url(../img/dark-background.png);
+    --bg-container: #0f172a;
+    --text-color: #f7d7d7ce;
+    --button-bg: #0f172a;
+    --button-text: #f7d7d7ce;
+    opacity:0.9;
+}
+
+body.dark input {
+    color: #000;
 }
 
 header {
