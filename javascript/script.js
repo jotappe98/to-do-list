@@ -9,6 +9,10 @@ const searchInput = document.querySelector("#search-input");
 const eraseBtn = document.querySelector("#erase-button");
 const filterBtn = document.querySelector("#filter-select");
 const confirmEditBtn = document.querySelector("#confirm-edit");
+const toolbar = document.querySelector("#toolbar");
+const emptyState = document.querySelector("#empty-state");
+const noResults = document.querySelector("#no-results");
+const editingLabel = document.querySelector("#editing-label");
 
 
 
@@ -46,6 +50,7 @@ const saveTodo = (text,done = 0,save = 1,idParam = null) => {
     removeBtn.innerHTML = '<i class="fa-solid fa-xmark"></i>'
     todo.appendChild(removeBtn)
 
+
     //Dados da LS
     if(done){
         todo.classList.add("done");
@@ -67,6 +72,7 @@ const saveTodo = (text,done = 0,save = 1,idParam = null) => {
     todoInput.value = "";
     todoInput.focus();
     toggleEmptyState();
+    applyFilters();
 }
 
 //Funcao para alternar entre os formularios de edicao e criacao de tarefas
@@ -74,8 +80,39 @@ const toggleForms = () => {
     editForm.classList.toggle("hide");
     todoForm.classList.toggle("hide");
     todoList.classList.toggle("hide");
+    toolbar.classList.toggle("hide");
 }
 
+
+
+
+//Funcao para filtrar as tarefas
+const applyFilters = () => {
+    if (!editForm.classList.contains("hide")) return;
+
+    const todos = document.querySelectorAll(".todo");
+    const searchValue = searchInput.value.toLowerCase();
+    const filterValue = filterBtn.value;
+
+    todos.forEach((todo) => {
+        const title = todo.querySelector("h3").innerText.toLowerCase();
+        const isDone = todo.classList.contains("done");
+
+        const matchSearch = title.includes(searchValue);
+
+        let matchFilter = true;
+
+        if (filterValue === "done") {
+            matchFilter = isDone;
+        } else if (filterValue === "todo") {
+            matchFilter = !isDone;
+        }
+
+        todo.style.display = (matchSearch && matchFilter) ? "flex" : "none";
+    });
+
+    toggleEmptyState(); 
+};
 
 
 //Funcao para atualizar uma tarefa
@@ -95,106 +132,57 @@ const updateTodo = (text) => {
 const toggleNoResultsMessage = (hasResults) => {
     const message = document.querySelector("#no-results");
 
-    if (!hasResults) {
-        message.style.display = "block";
-    } else {
-        message.style.display = "none";
-    }
+    message.style.display = hasResults ? "none" : "block";
 };
 
 
-//Funcao para pesquisar tarefas especificas
 
-const getSearchTodo = (search) => {
-    const todos = document.querySelectorAll(".todo");
-
-    let hasResults = false;
-
-    todos.forEach((todo) => {
-        let todoTitle = todo.querySelector("h3").innerText.toLowerCase();
-
-        const normalizedSearch = search.toLowerCase();  
-
-        if (todoTitle.includes(normalizedSearch)) {
-            todo.style.display = "flex";
-            hasResults = true;
-        } else {
-            todo.style.display = "none";
-        }
-    });
-
-    toggleNoResultsMessage(hasResults);
-
-};
-
-//Funcao para filtrar tarefas por status (todas, pendentes ou concluídas)
-
-const filterTodos = (filterValue) => {
-    const todos = document.querySelectorAll(".todo");
-
-    switch(filterValue) {
-        case "all":
-            todos.forEach((todo) => todo.style.display = "flex")
-            break;
-
-        case "done":
-            todos.forEach((todo) => 
-            todo.classList.contains("done")
-            ? (todo.style.display = "flex") 
-            : (todo.style.display = "none")
-            );
-            break;
-
-        case "todo":
-            todos.forEach((todo) => 
-            !todo.classList.contains("done")
-            ? (todo.style.display = "flex") 
-            : (todo.style.display = "none")
-            );
-            break;
-        default:
-            break;
-    };
-};
 
 //Funcao para UX dinamico
 
 const toggleEmptyState = () => {
+    if (!editForm.classList.contains("hide")) return;
+
     const todos = document.querySelectorAll(".todo");
     const visibleTodos = Array.from(todos).filter(todo => todo.style.display !== "none");
-    const emptyState = document.querySelector("#empty-state");
-
-    
-    if (!editForm.classList.contains("hide")) {
-        emptyState.style.display = "none";
-        return;
-    }
+    const searchValue = searchInput.value.trim();
+    const filterValue = filterBtn.value;
 
     emptyState.style.display = "block";
 
-    const filterValue = filterBtn.value;
+    
+    if (searchValue) {
+        if (visibleTodos.length === 0) {
+            emptyState.innerText = "Nenhuma tarefa encontrada";
+            emptyState.classList.remove("has-tasks");
+        } else {
+            emptyState.innerText = "Suas tarefas:";
+            emptyState.classList.add("has-tasks");
+        }
+        return;
+    }
 
     
     if (visibleTodos.length === 0) {
         switch(filterValue) {
-            case "all":
-                emptyState.innerText = "O que vamos fazer hoje?";
-                break;
             case "done":
                 emptyState.innerText = "Você ainda não concluiu nenhuma tarefa";
                 break;
             case "todo":
                 emptyState.innerText = "Sem tarefas pendentes";
                 break;
+            default:
+                emptyState.innerText = "O que vamos fazer hoje?";
         }
 
         emptyState.classList.remove("has-tasks");
-    } else {
-        emptyState.innerText = "Suas tarefas:";
-        emptyState.classList.add("has-tasks");
+        return;
     }
-};
 
+    
+    emptyState.innerText = "Suas tarefas:";
+    emptyState.classList.add("has-tasks");
+};
 
 //Funcao de verificacao de tarefa ja existente
 
@@ -234,6 +222,7 @@ document.addEventListener("click", (e) =>{
     if(targetEl.classList.contains("finish-todo")){
         parentEl.classList.toggle("done");
         updateLocalStorage();
+        applyFilters();
     }
 
     //Edição de tarefa
@@ -241,11 +230,14 @@ document.addEventListener("click", (e) =>{
     toggleForms();
     editInput.value = todoTitle;
     oldInputValue = todoTitle;
-
     editingTodoId = parentEl.getAttribute("data-id");
 
-    toggleEmptyState(); 
-    };
+    editingLabel.innerText = `Editando: "${todoTitle}"`;
+    editingLabel.classList.remove("hide");
+
+    emptyState.style.display = "none";
+    noResults.style.display = "none";
+};
 
     //Remoção de tarefa
     if(targetEl.classList.contains("remove-todo")){
@@ -254,6 +246,7 @@ document.addEventListener("click", (e) =>{
         updateLocalStorage();
         toggleEmptyState();
         removeTodoLocalStorage(id);
+        applyFilters();
     }
 });
 
@@ -262,6 +255,9 @@ cancelEditBtn.addEventListener("click", (e) => {
     e.preventDefault();
     toggleForms();
     toggleEmptyState();
+    editingLabel.classList.add("hide");
+    applyFilters();
+    
 });
 
 //Evento para salvar a edição de uma tarefa
@@ -279,15 +275,11 @@ editForm.addEventListener("submit", (e) => {
 
     toggleForms();
     toggleEmptyState();
+    editingLabel.classList.add("hide");
+    applyFilters();
 })
 
 
-
-//Evento para pesquisar tarefas especificas
-searchInput.addEventListener("keyup", (e) => {
-    const search = e.target.value;
-    getSearchTodo(search);
-});
 
 
 //Evento para limpar pesquisa no campo de busca
@@ -298,14 +290,6 @@ eraseBtn.addEventListener("click", (e) => {
     searchInput.dispatchEvent(new Event("keyup"));
 });
 
-
-//Evento para filtrar tarefas por status (todas, pendentes ou concluídas)
-
-filterBtn.addEventListener("change", (e) => {
-    const filterValue = e.target.value;
-    filterTodos(filterValue);
-    toggleEmptyState();
-});
 
 //Evento para confirmar a edição de uma tarefa
 confirmEditBtn.addEventListener("click", (e) => {
@@ -322,6 +306,22 @@ confirmEditBtn.addEventListener("click", (e) => {
 
     toggleForms();
     toggleEmptyState();
+    editingLabel.classList.add("hide");
+    applyFilters();
+});
+
+
+
+//Evento para buscar tarefas
+searchInput.addEventListener("keyup", () => {
+    applyFilters();
+});
+
+
+
+//Evento para filtrar as tarefas
+filterBtn.addEventListener("change", () => {
+    applyFilters();
 });
 
 
@@ -392,7 +392,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
     document.querySelector("#duplicate-warning").style.display = "none";
 
-    toggleEmptyState();
+    applyFilters();
 });
 
 
